@@ -1,6 +1,6 @@
 (function( $ ){
     
-    var CONFIG = "griddy.config", DATA = "griddy.data", DOC_FLAG = "griddy.table_resizing_state";
+    var CONFIG = "griddy.config", DATA = "griddy.data", DOC_FLAG = "griddy.table_resizing_state", DEVEL = true;
 
     $.fn.griddy = function( method ) {
 
@@ -21,6 +21,8 @@
 
                     table.data( CONFIG, config );
                     table.data( DATA, data );
+                    
+//                    table.width( "auto" );
 
                     //- Record all resizeable columns
                     table.find("thead th").each( function( i ) {
@@ -67,6 +69,10 @@
                             table.data( DATA )["column"] = col;
 
                             $(document).data( DOC_FLAG, table );
+                            
+                            if ( DEVEL ) {
+                                console.info( "Mouse down at " + event.pageX + " x " + event.pageY );
+                            }
                         }
                     });
 
@@ -100,6 +106,7 @@
                         cols         = $.grep( table.data( DATA )["columns"], function( item ) { return item.offset > offset; }),
                         reqWidth     = width,
                         origWidth    = element.width(),
+                        delta        = width - origWidth,
                         leftPadding  = parseFloat( element.css("padding-left") )       || 0,
                         rightPadding = parseFloat( element.css("padding-right") )      || 0,
                         leftBorder   = parseFloat( element.css("border-left-width") )  || 0,
@@ -127,49 +134,43 @@
                     }
 
                     element.width( width );
-                    
-                    width = element.width();
-
-                    if ( debug ) {
-                        console.info("Width [raw]   is now " + width + "px");                        
-                        
-                        console.info(" --- ");
-
-                        console.info("Left Padding  " + leftPadding);
-                        console.info("Right Padding " + rightPadding);
-                        console.info("Left Border   " + leftBorder);
-                        console.info("Right Border  " + rightBorder);
-                        console.info("Left Margin   " + leftMargin);
-                        console.info("Right Margin  " + rightMargin);
-                        console.info("------------> " + (leftPadding+rightPadding+leftBorder+rightBorder+leftMargin+rightMargin));
-                        
-                        console.info(" --- ");
-
-                        console.info("Width [outer] is now " + element.outerWidth() + "px");
-                        console.info("Width [inner] is now " + element.innerWidth() + "px");
-                        
-                    }
+                    // 
+                    // width = element.width();
+                    // 
+                    // if ( debug ) {
+                    //     console.info("Width [raw]   is now " + width + "px");                        
+                    //     
+                    //     console.info(" --- ");
+                    // 
+                    //     console.info("Left Padding  " + leftPadding);
+                    //     console.info("Right Padding " + rightPadding);
+                    //     console.info("Left Border   " + leftBorder);
+                    //     console.info("Right Border  " + rightBorder);
+                    //     console.info("Left Margin   " + leftMargin);
+                    //     console.info("Right Margin  " + rightMargin);
+                    //     console.info("------------> " + (leftPadding+rightPadding+leftBorder+rightBorder+leftMargin+rightMargin));
+                    //     
+                    //     console.info(" --- ");
+                    // 
+                    //     console.info("Width [outer] is now " + element.outerWidth() + "px");
+                    //     console.info("Width [inner] is now " + element.innerWidth() + "px");                        
+                    // }
 
                     var tableGrowth = table.width() - tableOriginalSize;
-                    if ( tableGrowth != 0 ) {
-                        console.info("Table grew by " + (table.width() - tableOriginalSize));
+                    if ( tableGrowth > 0 ) {
                         
-                        
-                        
-                        // element.next().width( element.next().width() - tableGrowth )
                         element.width( origWidth );
+                    } else if ( tableGrowth < 0 ) {
+                        var target = element.next();
+                        
+                        if ( target ) {
+                            target.width( target.width() - delta );
+                        } else {
+                            element.width( origWidth );
+                        }
                     }
-//                        var adjustedSize = width + table.width() - tableOriginalSize;
-//                        element.css({ width: adjustedSize + "px" });
-//
-//                        console.info("Table too large... adjusting size to " + adjustedSize );
-//                    }
 
-//                    for( var i = 0 ; i < cols.length ; i++ ) {
-//                        cols[i].object.css({
-//                            width: cols[i].object.width() - (delta / cols.length)
-//                        });
-//                    }
+                    return width;
                 }
             };
 
@@ -201,13 +202,17 @@
 
     $(document).mouseup( function( event ) {
         var table = $(document).data( DOC_FLAG );
-
+        
         if ( table ) {
-            var col      = table.data( DATA ).column,
-                delta    = event.pageX - table.data( DATA ).downAt.x,
+            var delta    = event.pageX - table.data( DATA ).downAt.x,
+                col      = table.data( DATA ).column,
                 newSize  = col.width + delta;
 
-            table.griddy("resizeColumn", col.offset, newSize, true);
+            if ( DEVEL ) {
+                console.info( "Mouse up at " + event.pageX + " x " + event.pageY + " w= " + col.width + "px");
+            }
+
+            col.width = table.griddy( "resizeColumn", col.offset, newSize, DEVEL );
 
             //- Clear out the state variables
             $(document).data( DOC_FLAG, null);

@@ -1,8 +1,10 @@
 (function( $ ){
+    
+    var CONFIG = "griddy.config", DATA = "griddy.data", DOC_FLAG = "griddy.table_resizing_state";
 
     $.fn.griddy = function( method ) {
 
-        var version = "1.0.0", CONFIG = "griddy.config", DATA = "griddy.data",
+        var version = "1.0.0"
             defaults = {
                 edgeWidth: 2,
                 minColWidth: 20
@@ -31,7 +33,8 @@
                                 offset: i
                             });
                         }
-                        header.css({ width: header.width() + "px" });
+                        header.width( header.width() );
+                        header.html( $("<div />").append( header.html() ) );
                     });
 
                     //- Add some extra styling to make the resize work as expected
@@ -45,7 +48,7 @@
 
                     //- Set the correct mouse pointer
                     table.mousemove( function( event ) {
-                        if ( $(document).data( "table_resizing") ) { return; }
+                        if ( $(document).data( DOC_FLAG ) ) { return; }
 
                         if ( methods.isHotSpot.apply( this, [ event.pageX, event.pageY ] ) ) {
                             table.css("cursor", "col-resize");
@@ -63,10 +66,7 @@
                             table.data( DATA )["downAt"] = { x: event.pageX, y: event.pageY };
                             table.data( DATA )["column"] = col;
 
-                            $(document).data( "table_resizing", table );
-
-                            console.info("Start table resize...");
-                            console.info( table.data( DATA ) );
+                            $(document).data( DOC_FLAG, table );
                         }
                     });
 
@@ -76,36 +76,89 @@
 
                     return this;
                 },
+
                 isHotSpot: function( x, y ) {
-                    var head = $(this).find("thead"), config = $(this).data(CONFIG), cols = $(this).data( DATA )["columns"];
+                    var head = $(this).find("thead"), config = $(this).data( CONFIG ), cols = $(this).data( DATA )["columns"];
 
                     if (y >= head.offset().top && y <= head.offset().top + head.outerHeight( true )) {
                         for ( var i = 0 ; i < cols.length ; i++ ) {
-                            var col = $(cols[i].object);
+                            
+                            var col   = $(cols[i].object),
+                                left  = (col.offset().left + col.outerWidth( true ) - config["edgeWidth"]),
+                                right = (col.offset().left + col.outerWidth( true ) + config["edgeWidth"] );
 
-                            if ( (x >= (col.offset().left + col.outerWidth( true ) - config["edgeWidth"])) && (x <= (col.offset().left + col.outerWidth( true ) + config["edgeWidth"] ))) {
-                                return cols[i];
-                            }
+                            if ( (x >= left) && (x <= right)) { return cols[i]; }
                         }
                     }
 
-                    return null
+                    return null;
                 },
-                resizeColumn: function( offset, width ) {
-                    var table   = $(this), tableOriginalSize = table.width(),
-                        element = $(table.find("th")[ offset ]),
-                        cols    = $.grep( table.data( DATA)["columns"], function( item ) { return item.offset > offset; }),
-                        delta   = width - element.width();
 
-                    width = Math.max( width, table.data( CONFIG ).minColWidth ); // ;
+                resizeColumn: function( offset, width, debug ) {
+                    var table        = $(this), tableOriginalSize = table.width(),
+                        element      = table.find("th").eq( offset ),
+                        cols         = $.grep( table.data( DATA )["columns"], function( item ) { return item.offset > offset; }),
+                        reqWidth     = width,
+                        origWidth    = element.width(),
+                        leftPadding  = parseFloat( element.css("padding-left") )       || 0,
+                        rightPadding = parseFloat( element.css("padding-right") )      || 0,
+                        leftBorder   = parseFloat( element.css("border-left-width") )  || 0,
+                        rightBorder  = parseFloat( element.css("border-right-width") ) || 0,
+                        leftMargin   = parseFloat( element.css("margin-left") )        || 0,
+                        rightMargin  = parseFloat( element.css("margin-right") )       || 0;
 
-                    console.info("Setting width to " + width + "px");
+                    width -= leftPadding;
+                    width -= rightPadding;
+                    
+                    width -= leftBorder;
+                    width -= rightBorder;
+                    
+                    width -= leftMargin;
+                    width -= rightMargin;
 
-                    element.css({ width: (width- parseInt( element.css("padding-left") ) - parseInt( element.css("padding-right") )) + "px" });
+                    //- Respect the min width specified on the configuration
+                    width = Math.max( width, table.data( CONFIG ).minColWidth );
 
-                    console.info("Width is now " + element.width() + "px");
+                    if ( debug ) {
+                        console.info("");
+                        console.info("#######################################");
+                        console.info("Requested width was " + reqWidth + "px");
+                        console.info("Setting width to " + width + "px");
+                    }
 
-//                    if ( table.width() > tableOriginalSize ) {
+                    element.width( width );
+                    
+                    width = element.width();
+
+                    if ( debug ) {
+                        console.info("Width [raw]   is now " + width + "px");                        
+                        
+                        console.info(" --- ");
+
+                        console.info("Left Padding  " + leftPadding);
+                        console.info("Right Padding " + rightPadding);
+                        console.info("Left Border   " + leftBorder);
+                        console.info("Right Border  " + rightBorder);
+                        console.info("Left Margin   " + leftMargin);
+                        console.info("Right Margin  " + rightMargin);
+                        console.info("------------> " + (leftPadding+rightPadding+leftBorder+rightBorder+leftMargin+rightMargin));
+                        
+                        console.info(" --- ");
+
+                        console.info("Width [outer] is now " + element.outerWidth() + "px");
+                        console.info("Width [inner] is now " + element.innerWidth() + "px");
+                        
+                    }
+
+                    var tableGrowth = table.width() - tableOriginalSize;
+                    if ( tableGrowth != 0 ) {
+                        console.info("Table grew by " + (table.width() - tableOriginalSize));
+                        
+                        
+                        
+                        // element.next().width( element.next().width() - tableGrowth )
+                        element.width( origWidth );
+                    }
 //                        var adjustedSize = width + table.width() - tableOriginalSize;
 //                        element.css({ width: adjustedSize + "px" });
 //
@@ -134,38 +187,34 @@
 
     }
 
-})( jQuery );
-
-$(function() {
     $(document).mousemove( function( event ) {
-        var table = $(document).data("table_resizing");
+        var table = $(document).data( DOC_FLAG );
 
         if ( table ) {
-            var col      = table.data("griddy.data")["column"],
-                delta    = event.pageX - table.data("griddy.data")["downAt"].x,
-                newSize  = Math.max( col.width + delta, parseInt( col.object.css("min-width")) );
-
-//            console.info("Original X : " + table.data("griddy.data")["downAt"].x );
-//            console.info("Moved To X : " + event.pageX );
-//
-//            console.info("Original Size : " + col.width );
-//            console.info("Resized Width : " + newSize + " ( " + col.width + " + " + delta + " )");
+            var col      = table.data( DATA ).column,
+                delta    = event.pageX - table.data( DATA ).downAt.x,
+                newSize  = col.width + delta;
 
             table.griddy("resizeColumn", col.offset, newSize);
         }
     });
 
     $(document).mouseup( function( event ) {
-        var table = $(document).data("table_resizing");
+        var table = $(document).data( DOC_FLAG );
 
         if ( table ) {
-            var col = table.data("griddy.data")["column"];
+            var col      = table.data( DATA ).column,
+                delta    = event.pageX - table.data( DATA ).downAt.x,
+                newSize  = col.width + delta;
 
-            $(document).data("table_resizing", null);
+            table.griddy("resizeColumn", col.offset, newSize, true);
 
-            col.width = col.object.width(); // - parseInt( col.object.css("padding-left") ) - parseInt( col.object.css("padding-right") );
-
-//            table.griddy("resizeColumn", col.offset, col.width);
+            //- Clear out the state variables
+            $(document).data( DOC_FLAG, null);
+            
+            table.data( DATA )["downAt"] = null;
+            table.data( DATA )["column"] = null;
         }
     });
-});
+
+})( jQuery );

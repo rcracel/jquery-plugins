@@ -112,6 +112,12 @@
                     
                     delta = width - element.width();
 
+                    console.info( delta )
+                    console.info( element.next().width() + " - " + delta + " < " + table.data( CONFIG ).minColWidth )
+                    
+                    if ( delta >= 0 && (element.next().width() - delta < table.data( CONFIG ).minColWidth )) { return element.width(); }
+                    
+
                     element.next().width( element.next().width() - delta );
                     element.width( width );
                     

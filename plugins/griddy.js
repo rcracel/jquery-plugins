@@ -22,8 +22,6 @@
                     table.data( CONFIG, config );
                     table.data( DATA, data );
                     
-//                    table.width( "auto" );
-
                     //- Record all resizeable columns
                     table.find("thead th").each( function( i ) {
                         var header = $(this);
@@ -38,6 +36,7 @@
                         header.width( header.width() );
                         header.html( $("<div />").append( header.html() ) );
                     });
+                    data.tableWidth = table.width();
 
                     //- Add some extra styling to make the resize work as expected
                     table.find("td,th").css({
@@ -69,10 +68,6 @@
                             table.data( DATA )["column"] = col;
 
                             $(document).data( DOC_FLAG, table );
-                            
-                            if ( DEVEL ) {
-                                console.info( "Mouse down at " + event.pageX + " x " + event.pageY );
-                            }
                         }
                     });
 
@@ -101,74 +96,23 @@
                 },
 
                 resizeColumn: function( offset, width, debug ) {
-                    var table        = $(this), tableOriginalSize = table.width(),
-                        element      = table.find("th").eq( offset ),
-                        cols         = $.grep( table.data( DATA )["columns"], function( item ) { return item.offset > offset; }),
-                        reqWidth     = width,
-                        origWidth    = element.width(),
-                        delta        = width - origWidth,
-                        leftPadding  = parseFloat( element.css("padding-left") )       || 0,
-                        rightPadding = parseFloat( element.css("padding-right") )      || 0,
-                        leftBorder   = parseFloat( element.css("border-left-width") )  || 0,
-                        rightBorder  = parseFloat( element.css("border-right-width") ) || 0,
-                        leftMargin   = parseFloat( element.css("margin-left") )        || 0,
-                        rightMargin  = parseFloat( element.css("margin-right") )       || 0;
-
-                    width -= leftPadding;
-                    width -= rightPadding;
+                    var table            = $(this),
+                        tableData        = table.data( DATA ),
+                        headers          = table.find("thead th"),
+                        element          = $( headers[offset] ),
+                        delta            = width - element.width(),
+                        widths           = [];
+                        
+                    //- Do not allow resizing the last header on the table, this will
+                    //- cause issues as we won't know how to adjust the table overall
+                    //- width...
+                    if ( element.next() == null ) { return element.width(); }
                     
-                    width -= leftBorder;
-                    width -= rightBorder;
-                    
-                    width -= leftMargin;
-                    width -= rightMargin;
-
                     //- Respect the min width specified on the configuration
                     width = Math.max( width, table.data( CONFIG ).minColWidth );
 
-                    if ( debug ) {
-                        console.info("");
-                        console.info("#######################################");
-                        console.info("Requested width was " + reqWidth + "px");
-                        console.info("Setting width to " + width + "px");
-                    }
-
                     element.width( width );
-                    // 
-                    // width = element.width();
-                    // 
-                    // if ( debug ) {
-                    //     console.info("Width [raw]   is now " + width + "px");                        
-                    //     
-                    //     console.info(" --- ");
-                    // 
-                    //     console.info("Left Padding  " + leftPadding);
-                    //     console.info("Right Padding " + rightPadding);
-                    //     console.info("Left Border   " + leftBorder);
-                    //     console.info("Right Border  " + rightBorder);
-                    //     console.info("Left Margin   " + leftMargin);
-                    //     console.info("Right Margin  " + rightMargin);
-                    //     console.info("------------> " + (leftPadding+rightPadding+leftBorder+rightBorder+leftMargin+rightMargin));
-                    //     
-                    //     console.info(" --- ");
-                    // 
-                    //     console.info("Width [outer] is now " + element.outerWidth() + "px");
-                    //     console.info("Width [inner] is now " + element.innerWidth() + "px");                        
-                    // }
-
-                    var tableGrowth = table.width() - tableOriginalSize;
-                    if ( tableGrowth > 0 ) {
-                        
-                        element.width( origWidth );
-                    } else if ( tableGrowth < 0 ) {
-                        var target = element.next();
-                        
-                        if ( target ) {
-                            target.width( target.width() - delta );
-                        } else {
-                            element.width( origWidth );
-                        }
-                    }
+                    element.next().width( element.next().width() - delta );
 
                     return width;
                 }
@@ -207,10 +151,6 @@
             var delta    = event.pageX - table.data( DATA ).downAt.x,
                 col      = table.data( DATA ).column,
                 newSize  = col.width + delta;
-
-            if ( DEVEL ) {
-                console.info( "Mouse up at " + event.pageX + " x " + event.pageY + " w= " + col.width + "px");
-            }
 
             col.width = table.griddy( "resizeColumn", col.offset, newSize, DEVEL );
 

@@ -12,7 +12,7 @@
             methods  = {
                 init: function( options ) {
                     var config = $.extend( {}, defaults, options ),
-                        data   = { columns: [] },
+                        data   = { columns: $([]) },
                         table  = $(this);
 
                     if ( typeof console != "undefined" ) {
@@ -100,8 +100,7 @@
                         tableData        = table.data( DATA ),
                         headers          = table.find("thead th"),
                         element          = $( headers[offset] ),
-                        delta            = width - element.width(),
-                        widths           = [];
+                        delta, widths = [];
                         
                     //- Do not allow resizing the last header on the table, this will
                     //- cause issues as we won't know how to adjust the table overall
@@ -110,9 +109,17 @@
                     
                     //- Respect the min width specified on the configuration
                     width = Math.max( width, table.data( CONFIG ).minColWidth );
+                    
+                    delta = width - element.width();
 
-                    element.width( width );
                     element.next().width( element.next().width() - delta );
+                    element.width( width );
+                    
+                    //- We need to update the column width for the current and next elements
+                    table.data( DATA ).columns.each( function() {
+                        if ( this.object.get(0) == element.get(0) ) { this.width = width; }
+                        if ( this.object.get(0) == element.next().get(0) ) { this.width = element.next().width(); }
+                    });
 
                     return width;
                 }
@@ -141,6 +148,8 @@
                 newSize  = col.width + delta;
 
             table.griddy("resizeColumn", col.offset, newSize);
+            
+            table.data( DATA ).downAt.x = event.pageX;
         }
     });
 

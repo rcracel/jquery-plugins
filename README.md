@@ -6,6 +6,8 @@
 
 <p>Please enjoy, and if you can, give back to the development community by submiting bug fixes and new features and documentation enhancements.</p>
 
+<h2>Plugins</h2>
+
 <dl>
     <dt>Griddy</dt>
     <dd>The griddy plugin allows you to add additional functionality to your data tables. A list of features available for this plugin is listed <a href="#griddy">here</a></dd>

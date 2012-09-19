@@ -20,6 +20,18 @@
 
 <h2>Griddy</h2>
 
+<h3>Features</h3>
+
+<h3>Wish List</h3>
+
+<h3>Known Issues</h3>
+
 <a href="dynatree"></a>
 
 <h2>DynaTree</h2>
+
+<h3>Features</h3>
+
+<h3>Wish List</h3>
+
+<h3>Known Issues</h3>

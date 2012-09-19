@@ -4,7 +4,7 @@
 
 <p>This is a collection of jQuery plugins I have created during my career as an engineer to help solve common day to day needs that I have noticed happening at every project I have ever worked on. This is my way of helping others who, like myself, find themselves spending countless hours trying to create or duplicate functionality widely available on the internet but often times unavailable as free standing libraries.</p>
 
-<p>Please enjoy, and if you can, give back to the community by submiting bug fixes and new features.</p>
+<p>Please enjoy, and if you can, give back to the development community by submiting bug fixes and new features and documentation enhancements.</p>
 
 <dl>
     <dt>Griddy</dt>

@@ -39,14 +39,14 @@
 
                     //- Add some extra styling to make the resize work as expected
                     table.find("td,th").each( function() {
-                        $(this).html( $("<div style='white-space: nowrap;' />").append( $(this).html() ) ).css({
+                        $(this).html( $("<div style='word-wrap: normal;' />").append( $(this).html() ) ).css({
                             'overflow'   : "hidden",
                             'white-space': "nowrap"
                         });
                     });
                     
-                    table.find("thead tr").css({ height: "1em" });
-                    table.find("tbody tr").css({ height: "1em" });
+                    // table.find("thead tr").css({ height: "1em" });
+                    // table.find("tbody tr").css({ height: "1em" });
                     table.css({ "table-layout" : "fixed" });
 
                     //- Set the correct mouse pointer

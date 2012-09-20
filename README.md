@@ -28,6 +28,11 @@
 
 <h3>Known Issues</h3>
 
+<ul>
+    <li>When tables get resized (browser window resize) the column widths should get updated</li>
+    <li>Column resize cursor gets out of place when trying to resize past the minimum width for a given column</li>
+</ul>
+
 <a href="dynatree"></a>
 
 <h2>DynaTree</h2>

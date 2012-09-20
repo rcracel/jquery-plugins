@@ -7,7 +7,7 @@
         var version = "1.0.0"
             defaults = {
                 edgeWidth: 2,
-                minColWidth: 20
+                minColWidth: 40
             },
             methods  = {
                 init: function( options ) {
@@ -34,15 +34,17 @@
                             });
                         }
                         header.width( header.width() );
-                        header.html( $("<div />").append( header.html() ) );
                     });
                     data.tableWidth = table.width();
 
                     //- Add some extra styling to make the resize work as expected
-                    table.find("td,th").css({
-                        'overflow'   : "hidden",
-                        'white-space': "nowrap"
+                    table.find("td,th").each( function() {
+                        $(this).html( $("<div style='white-space: nowrap;' />").append( $(this).html() ) ).css({
+                            'overflow'   : "hidden",
+                            'white-space': "nowrap"
+                        });
                     });
+                    
                     table.find("thead tr").css({ height: "1em" });
                     table.find("tbody tr").css({ height: "1em" });
                     table.css({ "table-layout" : "fixed" });

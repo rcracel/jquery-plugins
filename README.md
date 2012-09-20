@@ -31,6 +31,7 @@
 <ul>
     <li>When tables get resized (browser window resize) the column widths should get updated</li>
     <li>Column resize cursor gets out of place when trying to resize past the minimum width for a given column</li>
+    <li>Columns with multiple data elements need to be wrapped - for example, in a &lt;span&gt;&lt;/span&gt; to avoid formatting issues
 </ul>
 
 <a href="dynatree"></a>

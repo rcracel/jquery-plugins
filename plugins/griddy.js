@@ -39,7 +39,11 @@
 
                     //- Add some extra styling to make the resize work as expected
                     table.find("td,th").each( function() {
-                        $(this).html( $("<div style='word-wrap: normal;' />").append( $(this).html() ) ).css({
+                        var $this = $(this), wrapper = $("<div style='word-wrap: normal;' />"), children = $this.children();
+
+                        $this.append( wrapper.append( children ) );
+
+                        $this.css({
                             'overflow'   : "hidden",
                             'white-space': "nowrap"
                         });

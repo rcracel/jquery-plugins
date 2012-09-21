@@ -60,7 +60,7 @@
 
 <h3>Overview</h3>
 
-<h3>Usage</hh3
+<h3>Usage</h3>
 
 <h3>Features</h3>
 

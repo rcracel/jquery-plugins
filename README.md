@@ -6,6 +6,8 @@
 
 <p>Please enjoy, and if you can, give back to the development community by submiting bug fixes and new features and documentation enhancements.</p>
 
+<p>All plugins on this page require jQuery 1.7.1 or above</p>
+
 <h2>Plugins</h2>
 
 <dl>

@@ -28,7 +28,7 @@
 
 <p>Griddy has been tested on Google Chrome, Mozilla Firefox, Safari, and Internet Explorer 10</p>
 
-<h3>Usage</h3>
+<h3>Usage</h3>$("#
 
 <code>$("#myTable").griddy();</code>
 
@@ -77,4 +77,12 @@
 
 <h3>Wish List</h3>
 
+<ul>
+    <li>Send me an email if you want something added here</li>
+</ul>
+
 <h3>Known Issues</h3>
+
+<ul>
+    <li>None so far</li>
+</ul>

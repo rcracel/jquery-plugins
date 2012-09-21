@@ -22,7 +22,7 @@
 
 <h2>Griddy</h2>
 
-<p>Griddy was tested on Google Chrome, Mozilla Firefox, Internet Explorer 10</p>
+<p>Griddy has been tested on Google Chrome, Mozilla Firefox, Safari, and Internet Explorer 10</p>
 
 <h3>Features</h3>
 

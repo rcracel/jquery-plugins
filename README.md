@@ -28,6 +28,8 @@
 
 <p>Griddy has been tested on Google Chrome, Mozilla Firefox, Safari, and Internet Explorer 10</p>
 
+[Demo Site](http://jsfiddle.net/rcracel/qJzMU/2/embedded/result/)
+
 <h3>Usage</h3>
 
 <code>$("#myTable").griddy();</code>

@@ -58,7 +58,18 @@
 
 <h2>DynaTree</h2>
 
+<h3>Overview</h3>
+
+<h3>Usage</hh3
+
 <h3>Features</h3>
+
+<ul>
+    <li>Enables display of hierarchical data from a local or remote data source</li>
+    <li>Customizeable through the use of callbacks and event handlers with support for data massaging</li>
+    <li>Create editable trees that allow users to remove or add elements through a comprehensive API</li>
+    <li>The use of a common layout for the tree layout enables further customization of the visual aspect of the tree through javascript</li>
+</ul>
 
 <h3>Wish List</h3>
 

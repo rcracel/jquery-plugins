@@ -32,7 +32,7 @@
 
 <code>$("#myTable").griddy();</code>
 
-[Full API Documentation](Griddy API)
+[Full API Documentation](https://github.com/rcracel/jquery-plugins/wiki/Griddy-API)
 
 <h3>Features</h3>
 
@@ -64,7 +64,7 @@
 
 <h3>Usage</h3>
 
-[Full API Documentation](DynaTree API)
+[Full API Documentation](https://github.com/rcracel/jquery-plugins/wiki/DynaTree-API)
 
 <h3>Features</h3>
 

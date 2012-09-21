@@ -32,7 +32,7 @@
 
 <code>$("#myTable").griddy();</code>
 
-<a href="https://github.com/rcracel/jquery-plugins/wiki/Griddy-API">Full API Documentation</a>
+[Full API Documentation](https://github.com/rcracel/jquery-plugins/wiki/Griddy-API)
 
 <h3>Features</h3>
 

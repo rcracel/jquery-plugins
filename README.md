@@ -22,9 +22,21 @@
 
 <h2>Griddy</h2>
 
+<p>Griddy was tested on Google Chrome, Mozilla Firefox, Internet Explorer 10</p>
+
 <h3>Features</h3>
 
+<ul>
+    <li>Ability to tag table columns as being resizeable by adding a .resizeable class</li>
+    <li>Logical resizing of columns will enlarge or shrink columns to the right leaving the columns to the left untouched</li>
+    <li>Prevents text wrapping by hiding the overflow</li>
+</ul>
+
 <h3>Wish List</h3>
+
+<ul>
+    <li>Remember column widths on page reload by saving preferences on a cookie</li>
+</ul>
 
 <h3>Known Issues</h3>
 

@@ -32,6 +32,8 @@
 
 <code>$("#myTable").griddy();</code>
 
+[Full API Documentation](Griddy API)
+
 <h3>Features</h3>
 
 <ul>
@@ -61,6 +63,8 @@
 <h3>Overview</h3>
 
 <h3>Usage</h3>
+
+[Full API Documentation](DynaTree API)
 
 <h3>Features</h3>
 

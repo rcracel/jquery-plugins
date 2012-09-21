@@ -28,11 +28,7 @@
 
 <h3>Usage</h3>
 
-<code>
-$(function() {
-    $("#myTable").griddy();
-});
-</code>
+<code>$("#myTable").griddy();</code>
 
 <h3>Features</h3>
 

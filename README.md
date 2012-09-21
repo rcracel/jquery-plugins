@@ -32,7 +32,9 @@
 
 <h3>Usage</h3>
 
-<code>$("#myTable").griddy();</code>
+```javascript
+$("#myTable").griddy();
+```
 
 [Full API Documentation](https://github.com/rcracel/jquery-plugins/wiki/Griddy-API)
 
